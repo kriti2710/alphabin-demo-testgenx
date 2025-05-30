@@ -1,0 +1,12 @@
+node_modules
+playwright-report
+test-results
+allure-results
+recordings
+.DS_Store
+temp
+BrowserFactory.js
+cssCpath.js
+sourceOrderHighlighter.js
+abconfig.js
+setupHelpers.js

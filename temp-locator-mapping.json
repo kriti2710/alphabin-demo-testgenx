@@ -1,0 +1,82 @@
+{
+  "https://demo.alphabin.co/": [
+    {
+      "xpath": "//*[name()='svg'][.//*[name()='path' and contains(@d,'M25.1578 1')]]"
+    },
+    {
+      "xpath": "div[role=\"status\"]"
+    },
+    {
+      "xpath": "(//button[normalize-space()='Shop Now'])[1]"
+    }
+  ],
+  "https://demo.alphabin.co/login": [
+    {
+      "xpath": "input[name=\"email\"]"
+    },
+    {
+      "xpath": "input[name=\"password\"]"
+    }
+  ],
+  "https://demo.alphabin.co/products": [
+    {
+      "xpath": "(//*[name()='svg'][.//*[name()='path' and contains(@d,'M923 283.6')]])[3]"
+    },
+    {
+      "xpath": "(//*[name()='svg'][.//*[name()='path' and contains(@d,'M923 283.6')]])[2]"
+    },
+    {
+      "xpath": "(//*[name()='svg'][.//*[name()='path' and contains(@d,'M923 283.6')]])[5]"
+    },
+    {
+      "xpath": "div[role=\"status\"]"
+    },
+    {
+      "xpath": "svg[viewBox=\"0 0 512 512\"]"
+    }
+  ],
+  "https://demo.alphabin.co/wishlist": [
+    {
+      "xpath": "((//html[@lang='en']//body//div)[1]//div)[38]"
+    },
+    {
+      "xpath": "(//button[normalize-space()='Add to Cart'])[1]"
+    },
+    {
+      "xpath": "//button[normalize-space()='Add to Cart']"
+    },
+    {
+      "xpath": "div[role=\"status\"]"
+    },
+    {
+      "xpath": "((((//html[@lang='en']//body//div)[1]//div)[39]//div)[27]//button)[2]"
+    }
+  ],
+  "https://demo.alphabin.co/cart": [
+    {
+      "xpath": "((//html[@lang='en']//body//div)[1]//div)[39]"
+    },
+    {
+      "xpath": "//button[normalize-space()='Checkout']"
+    }
+  ],
+  "https://demo.alphabin.co/checkout": [
+    {
+      "xpath": "((//html[@lang='en']//body//div)[1]//div)[39]"
+    },
+    {
+      "xpath": "//button[normalize-space()='Cash on Delivery']"
+    },
+    {
+      "xpath": "//button[normalize-space()='Place Order']"
+    }
+  ],
+  "https://demo.alphabin.co/status/6839500a11cf7152d5791fbb": [
+    {
+      "xpath": "(((//html[@lang='en']//body//div)[1]//div)[38]//div)[2]"
+    },
+    {
+      "xpath": "//h3[normalize-space()='Your order is confirmed']"
+    }
+  ]
+}
