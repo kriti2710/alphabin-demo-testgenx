@@ -1,6 +1,9 @@
 name: Run Playwright Tests on Chromium
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:  # ✅ This line enables manual "Run workflow" button
 
 jobs:
   test:
