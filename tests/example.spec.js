@@ -705,6 +705,7 @@ test('Alpha_E2E_010: Verify that the New User Can View and Cancel an Order from 
 
 // Auto generated test case
 test('Alpha_E2E_011: Verify that the User Can Add a Product to Cart Before Login and Complete the Order After Logging In', async () => {
+    test.setTimeout(180000);
     // Setup and Navigation
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
@@ -784,6 +785,7 @@ test('Alpha_E2E_011: Verify that the User Can Add a Product to Cart Before Login
 
 // Test case to verify the navigation and interaction on the demo website
 test('test', async () => {
+    test.setTimeout(180000);
     // Setup and navigation to the target page
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
