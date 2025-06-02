@@ -1,138 +1,37 @@
-name: Run Playwright tests
+name: Playwright Tests
 
 on:
-  schedule:
-    - cron: '30 3 * * 1-5' # 9:00 AM IST on weekdays
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  run-pagination:
-    name: Run @pagination tests
+  test:
+    name: Run Playwright Tests
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shardIndex: [1, 2, 3]
-        shardTotal: [3]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-
-      - name: Cache npm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: 18
 
       - name: Install dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps
+        run: npm ci
 
-      - name: Run @pagination tests
-        run: npm run test:chrome -- --grep='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-        
-      - name: Upload blob report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run tests with parallel workers
+        run: npx playwright test --workers=4
+
+      - name: Upload test results (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v3
         with:
-          name: pagination-blob-report-${{ matrix.shardIndex }}
-          path: ./blob-report
-          retention-days: 1
-
-  run-non-pagination:
-    name: Run non-@pagination tests
-    needs: run-pagination
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        shardTotal: [10]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Cache npm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps
-
-      - name: Run non-@pagination tests
-        run: npm run test:chrome -- --grep-invert='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-
-      - name: Upload blob report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: non-pagination-blob-report-${{ matrix.shardIndex }}
-          path: ./blob-report
-          retention-days: 1
-
-  merge-reports:
-    name: Merge Reports
-    needs: [run-pagination, run-non-pagination]
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Cache npm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps
-
-      - name: Download blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: ./all-reports
-          pattern: '*-blob-report-*'
-          merge-multiple: true
-
-      - name: Merge HTML report
-        run: npx playwright merge-reports --config=playwright.config.ts ./all-reports
-
-      - name: Upload combined report
-        uses: actions/upload-artifact@v4
-        with:
-          name: Combined Test Report
-          path: ./playwright-report
-          retention-days: 14
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
+          name: playwright-test-results
+          path: test-results/
