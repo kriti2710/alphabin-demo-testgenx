@@ -22,7 +22,7 @@ module.exports = defineConfig({
         '--start-maximized',
       ]
     },
-    headless: false,
+    headless: true,
     baseURL: 'http://demo.alphabin.co',
     bypassCSP: true,
     trace: {
