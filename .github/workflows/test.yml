@@ -1,28 +1,111 @@
-name: Run Playwright Tests on Chromium
+name: Run Playwright tests
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch:  # ✅ This line enables manual "Run workflow" button
+  schedule:
+    - cron: '30 3 * * 1-5' # 9:00 AM IST on weekdays
+  workflow_dispatch:
 
 jobs:
-  test:
+  run-pagination:
+    name: Run @pagination tests
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3]
+        shardTotal: [3]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install Playwright and Browsers
-      run: npx playwright install --with-deps
+      - name: Run @pagination tests
+        run: npm run test:chrome -- --grep='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-    - name: Run Playwright tests
-      run: npx playwright test 
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: pagination-blob-report-${{ matrix.shardIndex }}
+          path: ./blob-report
+          retention-days: 1
+
+  run-non-pagination:
+    name: Run non-@pagination tests
+    needs: run-pagination
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shardTotal: [10]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run non-@pagination tests
+        run: npm run test:chrome -- --grep-invert='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: non-pagination-blob-report-${{ matrix.shardIndex }}
+          path: ./blob-report
+          retention-days: 1
+
+  merge-reports:
+    name: Merge Reports
+    needs: [run-pagination, run-non-pagination]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./all-reports
+          pattern: '*-blob-report-*'
+          merge-multiple: true
+
+      - name: Merge HTML report
+        run: npx playwright merge-reports --config=playwright.config.ts ./all-reports
+
+      - name: Upload combined report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Combined Test Report
+          path: ./playwright-report
+          retention-days: 14
