@@ -17,6 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Cache npm modules
         uses: actions/cache@v3
         with:
@@ -26,11 +31,13 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
       - name: Run @pagination tests
         run: npm run test:chrome -- --grep='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-
+        
       - name: Upload blob report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -52,6 +59,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Cache npm modules
         uses: actions/cache@v3
         with:
@@ -61,7 +73,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
       - name: Run non-@pagination tests
         run: npm run test:chrome -- --grep-invert='@pagination' --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -82,6 +96,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Cache npm modules
         uses: actions/cache@v3
         with:
@@ -91,7 +110,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
       - name: Download blob reports
         uses: actions/download-artifact@v4
@@ -109,3 +130,18 @@ jobs:
           name: Combined Test Report
           path: ./playwright-report
           retention-days: 14
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
+
+      - name: Slack Notification on Failure
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
