@@ -2,98 +2,152 @@ name: Run Playwright tests
 
 on:
   schedule:
-    - cron: '30 3 * * 1-5'  # 9:00 AM IST on weekdays
+    - cron: '30 3 * * 1-5' # 9:00 AM IST on weekdays
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Select the environment to run the tests'
-        required: true
-        default: 'Development'
-        type: choice
 
 jobs:
-  run-pagination-job1:
-    name: Run @pagination - Set 1
+  run-pagination:
+    name: Run @pagination tests
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'Development' }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
-      - uses: ./.github/actions/setup
+      - name: Run @pagination tests
+        run: npm run test:chrome -- --grep='@pagination'
 
-      - name: Run pagination set 1
-        run: npm run test:chrome -- --grep="@pagination .*Page1"
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: pagination-blob-report
+          path: ./blob-report
+          retention-days: 1
 
-  run-pagination-job2:
-    name: Run @pagination - Set 2
+  run-non-pagination-group1:
+    name: Non-pagination group 1
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'Development' }}
+    needs: run-pagination
+    if: ${{ always() }}
     steps:
       - uses: actions/checkout@v4
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
+      - name: Run group 1 non-pagination tests
+        run: npm run test:chrome -- --grep-invert='@pagination' --grep='@group1'
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: non-pagination-blob-report-group1
+          path: ./blob-report
+          retention-days: 1
 
-      - uses: ./.github/actions/setup
-
-      - name: Run pagination set 2
-        run: npm run test:chrome -- --grep="@pagination .*Page2"
-
-  run-non-pagination-job1:
-    name: Run non-@pagination - Set 1
+  run-non-pagination-group2:
+    name: Non-pagination group 2
     runs-on: ubuntu-latest
-    needs: [run-pagination-job1, run-pagination-job2]
+    needs: run-pagination
     if: ${{ always() }}
-    environment: ${{ github.event.inputs.environment || 'Development' }}
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci
-      - uses: ./.github/actions/setup
-
-      - name: Run non-pagination set 1
-        run: npm run test:chrome -- --grep-invert="@pagination" --grep="Login|Dashboard"
-
-  run-non-pagination-job2:
-    name: Run non-@pagination - Set 2
-    runs-on: ubuntu-latest
-    needs: [run-pagination-job1, run-pagination-job2]
-    if: ${{ always() }}
-    environment: ${{ github.event.inputs.environment || 'Development' }}
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - uses: ./.github/actions/setup
-
-      - name: Run non-pagination set 2
-        run: npm run test:chrome -- --grep-invert="@pagination" --grep="Settings|Reports"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps
+      - name: Run group 2 non-pagination tests
+        run: npm run test:chrome -- --grep-invert='@pagination' --grep='@group2'
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: non-pagination-blob-report-group2
+          path: ./blob-report
+          retention-days: 1
 
   merge-reports:
     name: Merge Reports
-    needs: [run-non-pagination-job1, run-non-pagination-job2]
+    needs: [run-pagination, run-non-pagination-group1, run-non-pagination-group2]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci
-      - uses: ./.github/actions/setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./all-reports
+          pattern: '*blob-report*'
+          merge-multiple: true
       - name: Merge HTML report
         run: npx playwright merge-reports --config=playwright.config.ts ./all-reports
-
-  data-cleanup:
-    name: Data Cleanup
-    needs: merge-reports
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - uses: ./.github/actions/setup
-
-      - name: Run cleanup
-        run: |
-          npx ts-node ./dataClenUpScripts/mergeTestData.ts &&
-          npx ts-node ./dataClenUpScripts/updateToIsTestData.ts &&
-          npx ts-node ./dataClenUpScripts/deleteTestData.ts
+      - name: Upload merged report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Combined Test Report
+          path: ./playwright-report
+          retention-days: 14
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
+      - name: Slack Notification on Failure
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
