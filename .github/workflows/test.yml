@@ -8,12 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
-
-  workflow_run:
-    workflows: ["Build and Deploy"]
-    types:
-      - completed
-      
+    
 jobs:
   test:
     timeout-minutes: 30
@@ -66,4 +61,4 @@ jobs:
       with:
         name: visual-regression-screenshots
         path: screenshots/
-        retention-days: 
+        retention-days: 7
