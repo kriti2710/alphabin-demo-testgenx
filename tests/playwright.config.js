@@ -1,35 +1,46 @@
+// @ts-check
+import { defineConfig, devices } from '@playwright/test';
 
-const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
-  testDir: './',
-  fullyParallel: false,
+  testDir: './tests',
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 1,
-  reporter: 'html',
+  workers: 5,
+  reporter: [
+    ['html', { open: 'never' }]
+  ],
+  timeout: 100000,
+//   expect: {
+//     timeout: 100000,
+//   },
   use: {
-    headless: false,
-    viewport: { width: 1280, height: 720 },
-    ignoreHTTPSErrors: true,
-    video: 'on-first-retry',
-    trace: 'on-first-retry',
     launchOptions: {
-      args: ['--start-maximized', '--disable-web-security']
-    }
+      slowMo: 1000,
+      args: [
+        '--start-maximized',
+      ]
+    },
+    headless: false,
+    baseURL: 'http://demo.alphabin.co',
+    bypassCSP: true,
+    trace: {
+      mode: 'on',
+      snapshots: true,
+      screenshots: true,
+      sources: true,
+      attachments: true
+    },
+    screenshot: 'only-on-failure',
+    video: 'on-first-retry',
   },
+
+  /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium' },
-    },
-    {
-      name: 'firefox',
-      use: { browserName: 'firefox' },
-    },
-    {
-      name: 'webkit',
-      use: { browserName: 'webkit' },
+      use: { ...devices['Desktop Chromium'], viewport: null, permissions: ['clipboard-read', 'clipboard-write'] },
     },
   ],
 });
