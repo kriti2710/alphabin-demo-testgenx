@@ -160,40 +160,6 @@ test('Alpha_E2E_002: Verify that a New User Can Successfully Complete the Journe
 });
 
 // Auto generated test case
-// test('test case', async () => {
-//     // Setup and Navigation
-//     const page1 = await context.newPage();
-//     await page1.goto('http://demo.alphabin.co');
-//     await abPlaywright.setupLogging(page1);
-
-//     // Login Steps
-//     await page1.locator(locators['Html_2'], { description: descriptions['Html_2'] }).click({ force: true });
-//     await page1.locator(locators['SVG Path inside SVG'], { description: descriptions['SVG Path inside SVG'] }).click({ force: true });
-//     await page1.locator(locators['Input with name email'], { description: descriptions['Input with name email'] }).click({ force: true });
-//     await page1.locator(locators['Input with name email'], { description: descriptions['Input with name email'] }).fill(`test01@gmail.com`);
-//     await page1.locator(locators['Input with name password'], { description: descriptions['Input with name password'] }).click({ force: true });
-//     await page1.locator(locators['Input with name password'], { description: descriptions['Input with name password'] }).fill(`Test@12345`);
-//     await page1.locator(locators['Input with name password'], { description: descriptions['Input with name password'] }).press(`Enter`);
-
-//     // Post-Login Verification
-//     await expect(page1.locator(locators['Html'], { description: descriptions['Html'] })).toBeVisible();
-//     await page1.waitForTimeout(1000);
-
-//     // Navigation to All Products
-//     await page1.locator(locators['Li with Text All Products'], { description: descriptions['Li with Text All Products'] }).click({ force: true });
-//     await expect(page1.locator(locators['H1 with Text All Products'], { description: descriptions['H1 with Text All Products'] })).toHaveText(`All Products`);
-//     await page1.locator(locators['Li with Text All Products'], { description: descriptions['Li with Text All Products'] }).click({ force: true });
-
-
-//     // Product Interaction
-//     await page1.locator(locators['SVG Path inside SVG_2'], { description: descriptions['SVG Path inside SVG_2'] }).click({ force: true });
-//     await page1.locator(locators['Img with alt Rode NT1-A Condenser Mic'], { description: descriptions['Img with alt Rode NT1-A Condenser Mic'] }).click({ force: true });
-
-//     // Cleanup
-//     await page1.close();
-// });
-
-// Auto generated test case
 test('Alpha_E2E_003: Verify That a New User Can Successfully Complete the Journey from Registration to a Multiple Order Placement', async () => {
     const uniqe = Math.floor(new Date().getTime() / 1000.0)
     const email = `kriti.test+${uniqe}@gmail.com`;
@@ -745,7 +711,12 @@ test('Alpha_E2E_011: Verify that the User Can Add a Product to Cart Before Login
     await abPlaywright.setupLogging(page1);
 
     // Navigate to the product page
-    await page1.locator(locators['Li with Text All Products'], { description: descriptions['Li with Text All Products'] }).click({ force: true });
+    // Interaction with the initial page elements
+    await page1.locator(locators['Html_2'], { description: descriptions['Html_2'] }).click({ force: true });
+    await page1.locator(locators['Button with Text Shop Now'], { description: descriptions['Button with Text Shop Now'] }).click({ force: true });
+
+    // Verification of the expected outcome
+    await expect(page1.locator(locators['Html inside body_13'], { description: descriptions['Html inside body_13'] })).toBeVisible();
     await page1.mouse.wheel(1, 176);
     await page1.mouse.wheel(1, 123);
     await page1.mouse.wheel(1, 4);
