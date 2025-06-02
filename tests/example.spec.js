@@ -1,4 +1,4 @@
-const { locators } = require('./globalLocators.js');
+import { locators } from '../globalLocator.js';
 import { test, expect } from '@playwright/test';
 import BrowserFactory from '../BrowserFactory.js';
 import abPlaywright from "alphabin-pw";
