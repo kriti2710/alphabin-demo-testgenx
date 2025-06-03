@@ -792,6 +792,7 @@ test('Alpha_E2E_011: Verify that the User Can Add a Product to Cart Before Login
     await page1.mouse.wheel(1, -418);
 
     // Cleanup
+    console.log('✅ All steps completed — now closing the browser tab.');
     await page1.close();
 });
 
@@ -809,7 +810,7 @@ test('test', async () => {
 
     // Verification of the expected outcome
     await expect(page1.locator(locators['Html inside body_13'], { description: descriptions['Html inside body_13'] })).toBeVisible();
-
+    console.log('✅ All steps completed — now closing the browser tab.');
     // Cleanup
     await page1.close();
 });
@@ -850,6 +851,7 @@ test('Alpha_E2E_09 - Verify that a User Can Add an Item to Wishlist, Then Move I
     // await expect(page1.locator(locators['Button with Text Place Order'], { description: descriptions['Button with Text Place Order'] })).toBeVisible();
     await page1.locator(locators['Button with Text Place Order'], { description: descriptions['Button with Text Place Order'] }).click({ force: true });
     // await expect(page1.locator(locators['H1 with Text Order Details'], { description: descriptions['H1 with Text Order Details'] })).toBeVisible(); const page1 = await context.newPage();
+    console.log('✅ All steps completed — now closing the browser tab.');
     await page1.close();
 });
 
@@ -982,5 +984,6 @@ test('Alpha_E2E_013 - Verify that the User Can Add a Product to Cart Before Logi
     await page1.waitForTimeout(10000);
     await expect(page1).toHaveTitle(`AB Demo Store`);
     await page1.waitForTimeout(10000);
+    console.log('✅ All steps completed — now closing the browser tab.');
     await page1.close();
 });
