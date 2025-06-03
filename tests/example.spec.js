@@ -21,30 +21,7 @@ test.beforeEach(async () => {
 
 test.afterEach(async () => {
     // await context?.close();
-}); import { locators } from '../globalLocator.js';
-const { chromium } = require('playwright');  // Or 'chromium' or 'firefox'.
-
-import { test, expect } from '@playwright/test';
-// import BrowserFactory from '../BrowserFactory.js';
-import abPlaywright from "alphabin-pw";
-import { descriptions } from '../elementDescriptions.js';
-
-let context;
-let browser;
-
-test.beforeEach(async () => {
-    browser = await chromium.launch({
-        headless: true,
-        args: ['--start-maximized']
-    });
-    context = await browser.newContext({
-        viewport: null  // Let the browser use the full available screen size
-    });
-});
-
-test.afterEach(async () => {
-    // await context?.close();
-});
+}); 
 
 // Auto generated test case
 test('case 1', async () => {
