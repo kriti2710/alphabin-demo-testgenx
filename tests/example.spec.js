@@ -794,6 +794,8 @@ test('Alpha_E2E_011: Verify that the User Can Add a Product to Cart Before Login
     // Cleanup
     console.log('✅ All steps completed — now closing the browser tab.');
     await page1.close();
+    console.log('Debug 1');
+
 });
 
 // Test case to verify the navigation and interaction on the demo website
@@ -813,6 +815,8 @@ test('test', async () => {
     console.log('✅ All steps completed — now closing the browser tab.');
     // Cleanup
     await page1.close();
+    console.log('Debug 1');
+
 });
 
 // Auto generated test case
