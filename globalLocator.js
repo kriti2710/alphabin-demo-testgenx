@@ -1,5 +1,4 @@
 const locators = {
-  
   "Button with Text": `(//button[normalize-space()='+'])[1]`,
   "Button with Text Add New Address": `//button[normalize-space()='Add New Address']`,
   "Button with Text Add to Cart": `//button[normalize-space()='Add to Cart']`,
@@ -159,7 +158,29 @@ const locators = {
   "SVG_5": `svg[viewBox="0 0 576 512"]`,
   "SVG_6": `svg[data-icon="bars"]`,
   "SVG_7": `svg[data-icon="appstore"]`,
-  "SVG_8": `svg[viewBox="0 0 44 44"]`
+  "SVG_8": `svg[viewBox="0 0 44 44"]`,
+  "Button with Text Add Your First Address": `//button[normalize-space()='Add Your First Address']`,
+  "Div starting with Text 1": `((((((//div[starts-with(normalize-space(), '1')])[1]//div)[1]//div)[5]//div)[10]//div)[1]//div)[1]`,
+  "Div starting with Text 1_1": `((//div[starts-with(normalize-space(), '1')])[1]//div)[1]`,
+  "Div with Text 1": `(//div[normalize-space()='1'])[1]`,
+  "H1": `(//h1[contains(text(), 'Logitech MX Master 3 Wireless ')])[1]`,
+  "H1 with Text Demo E-commerce Testing Store": `//h1[normalize-space()='Demo E-commerce Testing Store']`,
+  "H1 with Text JBL Charge 4 Bluetooth Speaker": `(//h1[normalize-space()='JBL Charge 4 Bluetooth Speaker'])[1]`,
+  "H2": `//h2[contains(text(), 'Logitech MX Master 3 Wireless ')]`,
+  "H2 with Text JBL Charge 4 Bluetooth Speaker": `//h2[normalize-space()='JBL Charge 4 Bluetooth Speaker']`,
+  "H2 with Text Your Cart": `//h2[normalize-space()='Your Cart']`,
+  "H3": `//h3[contains(text(), 'Logitech MX Master 3 Wireless ')]`,
+  "Html": `html[lang="en"] > body`,
+  "Img with alt camera": `img[alt="camera"]`,
+  "Label with for email": `label[for="email"]`,
+  "Label with for password": `label[for="password"]`,
+  "Li with Text About Us": `(//li[normalize-space()='About Us'])[1]`,
+  "Li with Text All Products": `(//li[normalize-space()='All Products'])[1]`,
+  "Li with Text Home": `(//li[normalize-space()='Home'])[1]`,
+  "P with Text  12 000": `(//p[normalize-space()='₹12,000'])[1]`,
+  "P with Text Addresses": `//p[normalize-space()='Addresses']`,
+  "P with Text Log Out": `//p[normalize-space()='Log Out']`,
+  "SVG": `svg[viewBox="0 0 576 512"]`,
 };
 
 module.exports = { locators };
