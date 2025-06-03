@@ -138,7 +138,7 @@ const locators = {
   "Span with Text Checkout": `//span[normalize-space()='Checkout']`,
   "Span with Text Filters": `//span[normalize-space()='Filters']`,
   "Span with Text Sign up": `//span[normalize-space()='Sign up']`,
-  "SVG": `svg[data-icon="eye"]`,
+ // "SVG": `svg[data-icon="eye"]`,
   "SVG Path inside SVG": `//*[name()='svg'][.//*[name()='path' and contains(@d,'M25.1578 1')]]`,
   "SVG Path inside SVG_1": `//*[name()='svg'][.//*[name()='path' and contains(@d,'M22 19.638')]]`,
   "SVG Path inside SVG_10": `(//*[name()='svg'][.//*[name()='path' and contains(@d,'M360 184h-')]])[1]`,
