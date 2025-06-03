@@ -23,6 +23,27 @@ test.afterEach(async () => {
     // await context?.close();
 }); 
 
+
+test('Amazon product search for laptop', async ({ page }) => {
+    // Navigate to Amazon's homepage
+    await page.goto('https://www.amazon.in');
+    const acceptCookies = page.locator('input[name="accept"]');
+    if (await acceptCookies.isVisible()) {
+        await acceptCookies.click();
+    }
+    await page.fill('#twotabsearchtextbox', 'laptop');
+    await page.click('#nav-search-submit-button');
+    await page.waitForSelector('.s-main-slot');
+    const results = page.locator('.s-main-slot .s-result-item');
+    await expect(results.first()).toBeVisible();
+    await results.first().click();
+    await page.waitForSelector('#productTitle');
+    const productTitle = await page.textContent('#productTitle');
+    console.log('Product Title:', productTitle.trim());
+});
+
+
+
 // Auto generated test case
 test('case 1', async () => {
     const page1 = await context.newPage();
