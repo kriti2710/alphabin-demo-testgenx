@@ -11,7 +11,7 @@ let browser;
 
 test.beforeEach(async () => {
     browser = await chromium.launch({
-        headless: false,
+        headless: true,
         args: ['--start-maximized']
     });
     context = await browser.newContext({
