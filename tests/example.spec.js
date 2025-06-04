@@ -1,27 +1,24 @@
-import { locators } from '../globalLocator.js';
-const { chromium } = require('playwright');  // Or 'chromium' or 'firefox'.
+const { locators } = require('../globalLocator.js');
+const { test, expect } = require('@playwright/test');
+const BrowserFactory = require('../BrowserFactory.js');
+const abPlaywright = require("alphabin-pw");
+const config = require('../playwright.config.js');
+const { descriptions } = require('../elementDescriptions.js')
 
-import { test, expect } from '@playwright/test';
-// import BrowserFactory from '../BrowserFactory.js';
-import abPlaywright from "alphabin-pw";
-import { descriptions } from '../elementDescriptions.js';
 
 let context;
-let browser;
 
 test.beforeEach(async () => {
-    browser = await chromium.launch({
-        headless: true,
-        args: ['--start-maximized']
-    });
-    context = await browser.newContext({
-        viewport: null  // Let the browser use the full available screen size
-    });
+    const result = await BrowserFactory.createBrowserWithContext(
+        config.projects[0].name,
+    );
+    context = result.context;
 });
 
 test.afterEach(async () => {
-    // await context?.close();
-}); 
+    await context?.close();
+});
+
 
 
 test('Amazon product search for laptop', async ({ page }) => {

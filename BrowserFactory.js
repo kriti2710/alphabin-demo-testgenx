@@ -5,15 +5,18 @@ const path = require('path');
 const fs = require('fs');
 // const { setupBrowser } = require('./setupHelpers.js');
 
-
 class BrowserFactory {
     static async createBrowserWithContext(browserName, contextOptions = {}) {
         let browser;
         let context;
+        const isHeadless = config.use.headless !== false;
 
         const launchOptions = {
             ...config.use.launchOptions,
-            args: [...(config.use.launchOptions?.args || []), '--start-maximized']
+            args: [
+                ...(config.use.launchOptions?.args || []),
+                '--window-size=1920,1080'  // works in both headless and headed mode
+            ]
         };
 
         switch (browserName.toLowerCase()) {
@@ -36,7 +39,8 @@ class BrowserFactory {
 
         let browserContextOptions = {
             ...contextOptions,
-            permissions
+            permissions,
+            viewport: { width: 1920, height: 1080 }
         };
 
         if (browserName.toLowerCase() === 'chromium') {
