@@ -94,10 +94,6 @@ jobs:
           ls -la ./all-reports
           npx playwright merge-reports ./all-reports --config playwright.config.ts
         
-      - name: Send TestDino report
-        run: |
-            npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose
-
       - name: Upload combined report
         uses: actions/upload-artifact@v4
         with:
@@ -111,3 +107,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./playwright-report
+
+      - name: Send TestDino report
+        run: |
+          npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose  

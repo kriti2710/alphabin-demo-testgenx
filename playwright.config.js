@@ -12,7 +12,7 @@ module.exports = defineConfig({
       outputFolder: 'playwright-report',
       open: 'never'
     }],
-    ['json', { outputFile: 'test-results/report.json' }],
+    ['json', { outputFile: 'playwright-report/report.json' }],
     // ['@alphabin/trx', {
 
     //    // Required configuration
