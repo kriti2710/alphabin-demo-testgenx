@@ -6,7 +6,7 @@ on:
     - cron: '30 9 * * 1-5'
     # 10:00 AM IST => 4:30 AM UTC for staging
     - cron: '30 11 * * 1-5'
-    # 12:00 PM IST => 6:30 AM UTC for dev
+    # 12:00 PM IST => 6:30 AM UTC for test
     - cron: '30 15 * * 1-5'
   workflow_dispatch:
 
@@ -15,9 +15,9 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     if: |
-      (github.ref == 'refs/heads/main' && github.event.schedule == '30 2 * * 1-5') ||
-      (github.ref == 'refs/heads/staging' && github.event.schedule == '30 4 * * 1-5') ||
-      (github.ref == 'refs/heads/dev' && github.event.schedule == '30 6 * * 1-5') ||
+      (github.ref == 'refs/heads/main' && github.event.schedule == '30 9 * * 1-5') ||
+      (github.ref == 'refs/heads/staging' && github.event.schedule == '30 11 * * 1-5') ||
+      (github.ref == 'refs/heads/dev' && github.event.schedule == '30 15 * * 1-5') ||
       github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
