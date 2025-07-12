@@ -89,10 +89,8 @@ jobs:
           pattern: test-blob-report-*
           merge-multiple: true
 
-      - name: Merge HTML report
-        run: |
-          ls -la ./all-reports
-          npx playwright merge-reports ./all-reports --config playwright.config.ts
+      - name: Merge HTML report  
+        run: npx playwright merge-reports --config=playwright.config.ts ./all-blob-reports
 
       - name: Upload combined report
         uses: actions/upload-artifact@v4
