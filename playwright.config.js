@@ -13,20 +13,20 @@ module.exports = defineConfig({
       open: 'never'
     }],
     ['json', { outputFile: 'test-results/report.json' }],
-    ['@alphabin/trx', {
+    // ['@alphabin/trx', {
 
-       // Required configuration
-       serverUrl: 'https://staging-api.testdino.com',
-       apiKey: 'trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e',
+    //    // Required configuration
+    //    serverUrl: 'https://staging-api.testdino.com',
+    //    apiKey: 'trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e',
    
 
-      // Optional: Custom tags
-      tags: [
-        'automated',
-        process.env.TEST_ENV || 'staging',
-        process.env.BRANCH_NAME || 'main'
-      ],
-    }]
+    //   // Optional: Custom tags
+    //   tags: [
+    //     'automated',
+    //     process.env.TEST_ENV || 'staging',
+    //     process.env.BRANCH_NAME || 'main'
+    //   ],
+    // }]
   ],
   timeout: 60000,
   use: {
