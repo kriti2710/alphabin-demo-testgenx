@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: test-blob-report-${{ matrix.shardIndex }}
+          name: blob-report-${{ matrix.shardIndex }}
           path: ./blob-report
           retention-days: 1
 
@@ -85,30 +85,22 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v4
         with:
-          path: ./all-reports
-          pattern: test-blob-report-*
+          path: ./all-blob-reports
+          pattern: blob-report-*
           merge-multiple: true
 
-      - name: Merge HTML report  
-        run: npx playwright merge-reports --config=playwright.config.ts ./all-blob-reports
+      - name: Merge HTML/JSON report  
+        run: npx playwright merge-reports --config=playwright.config.js ./all-blob-reports
 
       - name: Upload combined report
         uses: actions/upload-artifact@v4
         with:
-          name: Combined Test Report
+          name: Playwright Test Report
           path: ./playwright-report
           retention-days: 14
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ success() }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
       - name: Send TestDino report
+        env: 
+          NODE_ENV: 'staging'
         run: |
-          npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose  
-
-
-
-          
+          npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose     
