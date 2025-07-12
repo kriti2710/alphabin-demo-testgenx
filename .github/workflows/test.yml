@@ -2,13 +2,23 @@ name: Run Playwright tests
 
 on:
   schedule:
-    - cron: '30 3 * * 1-5' # 9:00 AM IST on weekdays
+    # 8:00 AM IST => 2:30 AM UTC for main
+    - cron: '30 9 * * 1-5'
+    # 10:00 AM IST => 4:30 AM UTC for staging
+    - cron: '30 11 * * 1-5'
+    # 12:00 PM IST => 6:30 AM UTC for dev
+    - cron: '30 15 * * 1-5'
   workflow_dispatch:
 
 jobs:
   run-tests:
     name: Run tests
     runs-on: ubuntu-latest
+    if: |
+      (github.ref == 'refs/heads/main' && github.event.schedule == '30 2 * * 1-5') ||
+      (github.ref == 'refs/heads/staging' && github.event.schedule == '30 4 * * 1-5') ||
+      (github.ref == 'refs/heads/dev' && github.event.schedule == '30 6 * * 1-5') ||
+      github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +59,7 @@ jobs:
   merge-reports:
     name: Merge Reports
     needs: [run-tests]
-    if: ${{ always() }}
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,11 +86,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./all-reports
-          pattern: '*-blob-report-*'
+          pattern: test-blob-report-*
           merge-multiple: true
 
       - name: Merge HTML report
-        run: npx playwright merge-reports --config=playwright.config.ts ./all-reports
+        run: |
+          ls -la ./all-reports
+          npx playwright merge-reports ./all-reports --config playwright.config.ts
 
       - name: Upload combined report
         uses: actions/upload-artifact@v4
@@ -91,6 +103,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ success() }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./playwright-report

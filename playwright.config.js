@@ -14,9 +14,11 @@ module.exports = defineConfig({
     }],
     ['json', { outputFile: 'test-results/report.json' }],
     ['@alphabin/trx', {
-      // Required configuration
-      serverUrl: 'https://staging-api.trx.alphabin.co',
-      apiKey: 'trx_staging_fca4516d70abceecbaf6ef8a0caf27f3e2a51e346ee4057eb87ba5c6a26671df',
+
+       // Required configuration
+       serverUrl: 'https://staging-api.testdino.com',
+       apiKey: 'trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e',
+   
 
       // Optional: Custom tags
       tags: [
@@ -51,4 +53,5 @@ module.exports = defineConfig({
       },
     },
   ],
-});
+    }
+);

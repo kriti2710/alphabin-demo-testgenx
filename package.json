@@ -18,6 +18,7 @@
     "playwright": "^1.47.2"
   },
   "devDependencies": {
+    "@currents/cmd": "^1.9.4",
     "@currents/playwright": "^1.14.2",
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.1.0"
