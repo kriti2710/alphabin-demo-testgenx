@@ -18,7 +18,7 @@ jobs:
     if: |
       (github.ref == 'refs/heads/main' && github.event.schedule == '0 9 * * 1-5') ||
       (github.ref == 'refs/heads/staging' && github.event.schedule == '0 11 * * 1-5') ||
-      (github.ref == 'refs/heads/dev' && github.event.schedule == '0 15 * * 1-5') ||
+      (github.ref == 'refs/heads/test' && github.event.schedule == '0 15 * * 1-5') ||
       github.event_name == 'workflow_dispatch'
 
     strategy:
