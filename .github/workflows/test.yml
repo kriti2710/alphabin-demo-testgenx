@@ -2,28 +2,31 @@ name: Run Playwright tests
 
 on:
   schedule:
-    # 8:00 AM IST => 2:30 AM UTC for main
-    - cron: '30 9 * * 1-5'
-    # 10:00 AM IST => 4:30 AM UTC for staging
-    - cron: '30 11 * * 1-5'
-    # 12:00 PM IST => 6:30 AM UTC for dev
-    - cron: '30 15 * * 1-5'
+    # 8:00 AM IST => 2:30 AM UTC for main branch
+    - cron: '0 9 * * 1-5'
+    # 10:00 AM IST => 4:30 AM UTC for staging branch
+    - cron: '0 11 * * 1-5'
+    # 12:00 PM IST => 6:30 AM UTC for dev branch
+    - cron: '0 15 * * 1-5'
   workflow_dispatch:
 
 jobs:
   run-tests:
     name: Run tests
     runs-on: ubuntu-latest
+
     if: |
-      (github.ref == 'refs/heads/main' && github.event.schedule == '30 2 * * 1-5') ||
-      (github.ref == 'refs/heads/staging' && github.event.schedule == '30 4 * * 1-5') ||
-      (github.ref == 'refs/heads/dev' && github.event.schedule == '30 6 * * 1-5') ||
+      (github.ref == 'refs/heads/main' && github.event.schedule == '0 9 * * 1-5') ||
+      (github.ref == 'refs/heads/staging' && github.event.schedule == '0 11 * * 1-5') ||
+      (github.ref == 'refs/heads/dev' && github.event.schedule == '0 15 * * 1-5') ||
       github.event_name == 'workflow_dispatch'
+
     strategy:
       fail-fast: false
       matrix:
         shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         shardTotal: [10]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -61,6 +64,7 @@ jobs:
     needs: [run-tests]
     if: always()
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -103,4 +107,4 @@ jobs:
         env: 
           NODE_ENV: 'staging'
         run: |
-          npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose     
+          npx --yes tdpw ./playwright-report --token="trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e" --upload-html --verbose  
