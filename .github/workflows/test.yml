@@ -5,10 +5,10 @@
 name: Run Playwright tests
 
 on:
+  workflow_dispatch:
   schedule:
     # GitHub cron is always UTC → 06:12 UTC = 11:42 AM IST (UTC+5:30)
-    - cron: '0 13 * * 1-5'
-  workflow_dispatch:
+    - cron: '*/5 * * * 1-5'
 
 jobs:
   run-tests:
