@@ -2,12 +2,7 @@ name: Run Playwright tests
 
 on:
   schedule:
-    # 8:00 AM IST => 2:30 AM UTC for main branch
-    - cron: '0 9 * * 1-5'
-    # 10:00 AM IST => 4:30 AM UTC for staging branch
     - cron: '14 11 * * *'
-    # 12:00 PM IST => 6:30 AM UTC for dev branch
-    - cron: '0 15 * * 1-5'
   workflow_dispatch:
 
 jobs:
