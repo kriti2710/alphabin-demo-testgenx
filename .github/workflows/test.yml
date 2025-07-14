@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     # GitHub cron is always UTC → 06:12 UTC = 11:42 AM IST (UTC+5:30)
-    - cron: '*/5 * * * 1-5'
+    - cron: '30 3 * * 1-5'
 
 jobs:
   run-tests:
