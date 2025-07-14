@@ -2,7 +2,7 @@ name: Run Playwright tests
 
 on:
   schedule:
-    - cron: '50 5 * * *'
+    # - cron: '50 5 * * *'
   workflow_dispatch:
 
 jobs:
