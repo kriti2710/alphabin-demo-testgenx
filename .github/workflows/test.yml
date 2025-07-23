@@ -1,96 +1,92 @@
+# .github/workflows/playwright-daily.yml
+# Runs Playwright test shards every day at **11 : 42 AM IST** (06 : 12 UTC)
+# plus anytime you trigger it manually from the Actions tab.
+
 name: Run Playwright tests
 
 on:
-  schedule:
-    - cron: '30 3 * * 1-5' # 9:00 AM IST on weekdays
   workflow_dispatch:
+  schedule:
+    # GitHub cron is always UTC → 06:12 UTC = 11:42 AM IST (UTC+5:30)
+    - cron: '*/5 * * * 1-5'
 
 jobs:
   run-tests:
-    name: Run tests
+    name: Run Playwright shards
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shardIndex: [1,2,3,4,5,6,7,8,9,10]
         shardTotal: [10]
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Cache npm modules
+      - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Install dependencies
+      - name: Install deps + browsers
         run: |
           npm ci
           npx playwright install --with-deps
-
-      - name: Run tests
+      - name: Run shard ${{ matrix.shardIndex }}
         run: npm run test:chrome -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-
-      - name: Upload blob report
+      - name: Upload blob report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: test-blob-report-${{ matrix.shardIndex }}
+          name: blob-report-${{ matrix.shardIndex }}
           path: ./blob-report
           retention-days: 1
 
   merge-reports:
     name: Merge Reports
-    needs: [run-tests]
-    if: ${{ always() }}
+    needs: run-tests
+    if: always()             # run even if some shards fail
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Cache npm modules
+      - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Install dependencies
+      - name: Install deps + browsers
         run: |
           npm ci
           npx playwright install --with-deps
-
-      - name: Download blob reports
+      - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
-          path: ./all-reports
-          pattern: '*-blob-report-*'
+          path: ./all-blob-reports
+          pattern: blob-report-*
           merge-multiple: true
-
-      - name: Merge HTML report
-        run: npx playwright merge-reports --config=playwright.config.ts ./all-reports
-
+      - name: Merge HTML & JSON reports
+        run: npx playwright merge-reports --config=playwright.config.js ./all-blob-reports
       - name: Upload combined report
         uses: actions/upload-artifact@v4
         with:
-          name: Combined Test Report
+          name: Playwright Test Report
           path: ./playwright-report
           retention-days: 14
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
+      - name: Send TestDino report
+        env:
+          NODE_ENV: 'production'
+        run: |
+          npx --yes tdpw ./playwright-report \
+            --token="trx_production_9d4c90f10995875fb233965425923cb8958295005a90d7ed42a02a7544ac4eda" \
+            --upload-html \
+            --verbose
