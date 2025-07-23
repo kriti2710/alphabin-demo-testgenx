@@ -9,7 +9,9 @@ module.exports = defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 5,
   reporter: [
-    ['html', { open: 'never' }]
+    ['list'],
+    ['json', { outputFile: 'playwright-report/report.json' }],
+    ['html', { outputFolder: 'playwright-report', open: 'never' }]
   ],
   timeout: 100000,
 //   expect: {

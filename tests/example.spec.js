@@ -20,7 +20,8 @@ test.afterEach(async () => {
 });
 
 
-test('Alpha_E2E_014 - Verify that User is able to write and submit a product review successfully', async () => {
+
+test.only('Alpha_E2E_014 - Verify that User is able to write and submit a product review successfully', async () => {
     const email = `testing@gmail.com`;
     const password = `Testing@123`;
     const page1 = await context.newPage();
@@ -55,7 +56,7 @@ test('Alpha_E2E_014 - Verify that User is able to write and submit a product rev
     await page1.close();
   });
 
-test('Alpha_E2E_015 - Verify that User is able to edit product review successfully', async () => {
+test.only('Alpha_E2E_015 - Verify that User is able to edit product review successfully', async () => {
     const email = `testing@gmail.com`;
     const password = `Testing@123`;
     const page1 = await context.newPage();
@@ -99,7 +100,7 @@ test('Alpha_E2E_015 - Verify that User is able to edit product review successful
     await page1.close();
   });
 
-test('Alpha_E2E_016 - Verify that User is able to delete product review successfully', async () => {
+test.only('Alpha_E2E_016 - Verify that User is able to delete product review successfully', async () => {
     const email = `testing@gmail.com`;
     const password = `Testing@123`;
     const page1 = await context.newPage();
