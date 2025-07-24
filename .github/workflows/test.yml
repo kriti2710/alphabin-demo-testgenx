@@ -18,8 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [1,2,3,4,5,6,7,8,9,10]
-        shardTotal: [10]
+        shardIndex: [1,2]
+        shardTotal: [2]
 
     steps:
       - uses: actions/checkout@v4
@@ -102,6 +102,6 @@ jobs:
           NODE_ENV: 'staging'
         run: |
           npx --yes tdpw ./playwright-report \
-            --token="trx_staging_ed58efabb46925b5066ac4e1b24d7b6bbd50cd2196f5c34948a79ae9973f2214" \
+            --token="trx_staging_f8c5c219c6aced9ab61ed06734bfdf042528b55623c93e05d6f1f81f1e200ade" \
             --upload-html \
             --verbose

@@ -136,7 +136,6 @@ test('Alpha_E2E_016 - Verify that User is able to delete product review successf
     await page1.close();
 });
 
-
 // Auto generated test case
 test('Alpha_E2E_09 - Verify that a User Can Add an Item to Wishlist, Then Move It to Cart and Checkout', async () => {
     const page1 = await context.newPage();
@@ -176,7 +175,6 @@ test('Alpha_E2E_09 - Verify that a User Can Add an Item to Wishlist, Then Move I
     console.log('✅ All steps completed — now closing the browser tab.');
     await page1.close();
 });
-
 
 // Auto generated test case
 test('Alpha_E2E_012 - login to logout', async () => {
