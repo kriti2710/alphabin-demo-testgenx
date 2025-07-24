@@ -102,6 +102,6 @@ jobs:
           NODE_ENV: 'staging'
         run: |
           npx --yes tdpw ./playwright-report \
-            --token="trx_staging_6d504df52204773c21ac5c545b1c5158dd45ca928656dcf4b57377f279bcb8ef" \
+            --token="trx_staging_ed58efabb46925b5066ac4e1b24d7b6bbd50cd2196f5c34948a79ae9973f2214" \
             --upload-html \
             --verbose
