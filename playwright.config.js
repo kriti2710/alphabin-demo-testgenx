@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
-
 module.exports = defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -9,42 +8,51 @@ module.exports = defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 5,
   reporter: [
-    // ['list'],
-    // ['json', { outputFile: 'playwright-report', open: never' }],
-    // ['html', { outputFolder: 'playwright-report', open: 'never' }]
-    ['html', { open: 'never' }],
-    ['json', { outputFile: 'playwright-report/report.json' }]
+    ['html', {
+      outputFolder: 'playwright-report',
+      open: 'never'
+    }],
+    ['blob', { outputDir: 'blob-report' }], // Use blob reporter
+    ['json', { outputFile: './playwright-report/report.json' }],
+    // ['@alphabin/trx', {
+
+    //    // Required configuration
+    //    serverUrl: 'https://staging-api.testdino.com',
+    //    apiKey: 'trx_staging_8e8d07d94ddde82c43fac1c83401555efbdff83c0e290138a95905df2a8e739e',
+   
+
+    //   // Optional: Custom tags
+    //   tags: [
+    //     'automated',
+    //     process.env.TEST_ENV || 'staging',
+    //     process.env.BRANCH_NAME || 'main'
+    //   ],
+    // }]
   ],
-  timeout: 100000,
-//   expect: {
-//     timeout: 100000,
-//   },
+  timeout: 60000,
   use: {
     launchOptions: {
       slowMo: 1000,
-      args: [
-        '--start-maximized',
-      ]
+      args: ['--start-maximized']
     },
     headless: true,
     baseURL: 'http://demo.alphabin.co',
     bypassCSP: true,
-    trace: {
-      mode: 'on',
-      snapshots: true,
-      screenshots: true,
-      sources: true,
-      attachments: true
-    },
-    screenshot: 'only-on-failure',
-    video: 'on-first-retry',
+    trace: 'on',           
+    screenshot: 'on',     
+    video: 'on',         
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chromium'], viewport: null, permissions: ['clipboard-read', 'clipboard-write'] },
+      use: {
+        ...devices['Desktop Chromium'],
+        viewport: null,
+        permissions: ['clipboard-read', 'clipboard-write']
+      },
     },
   ],
-});
+    }
+);
