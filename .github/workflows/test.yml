@@ -5,26 +5,30 @@
 name: Run Playwright tests
 
 on:
-  workflow_dispatch:
   schedule:
     # GitHub cron is always UTC → 06:12 UTC = 11:42 AM IST (UTC+5:30)
-    - cron: '*/5 * * * 1-5'
+    - cron: '4 7 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   run-tests:
     name: Run Playwright shards
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         shardIndex: [1,2,3,4,5,6,7,8,9,10]
         shardTotal: [10]
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+
       - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
@@ -32,12 +36,15 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
       - name: Install deps + browsers
         run: |
           npm ci
           npx playwright install --with-deps
+
       - name: Run shard ${{ matrix.shardIndex }}
         run: npm run test:chrome -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
       - name: Upload blob report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -51,12 +58,15 @@ jobs:
     needs: run-tests
     if: always()             # run even if some shards fail
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+
       - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
@@ -64,29 +74,43 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
       - name: Install deps + browsers
         run: |
           npm ci
           npx playwright install --with-deps
+
       - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
           path: ./all-blob-reports
           pattern: blob-report-*
           merge-multiple: true
+
       - name: Merge HTML & JSON reports
         run: npx playwright merge-reports --config=playwright.config.js ./all-blob-reports
+
       - name: Upload combined report
         uses: actions/upload-artifact@v4
         with:
           name: Playwright Test Report
           path: ./playwright-report
           retention-days: 14
+
       - name: Send TestDino report
         env:
-          NODE_ENV: 'production'
+          NODE_ENV: 'staging'
         run: |
           npx --yes tdpw ./playwright-report \
-            --token="trx_production_9d4c90f10995875fb233965425923cb8958295005a90d7ed42a02a7544ac4eda" \
+            --token="trx_staging_049ff874da3d21164af0ce775dfc8832357ad7b26368b5fb1cced3e6acb6efe2" \
             --upload-html \
             --verbose
+
+      # - name: Send TestDino report
+      #   env:
+      #     NODE_ENV: 'production'
+      #   # run: |
+        #   npx --yes tdpw ./playwright-report \
+        #    --token="trx_production_9d4c90f10995875fb233965425923cb8958295005a90d7ed42a02a7544ac4eda" \
+        #   --upload-html \
+        #   --verbose
