@@ -99,9 +99,9 @@ jobs:
 
       - name: Send TestDino report
         env:
-          NODE_ENV: 'staging'
+          NODE_ENV: 'production'
         run: |
           npx --yes tdpw ./playwright-report \
-            --token="trx_staging_7eaef03b93866628f98ef6d03e0c282483068d7ae53364c485e59c8216f9b4a5" \
+            --token="trx_production_246de5e39b097caf787de20864ff83ebc25dbb9cb6b4627ab9884e377a948f64" \
             --upload-html \
             --verbose
