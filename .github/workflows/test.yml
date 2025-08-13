@@ -1,6 +1,6 @@
 # .github/workflows/playwright-daily.yml
-# Runs Playwright test shards every day at **11 : 42 AM IST** (06 : 12 UTC)
-# plus anytime you trigger it manually from the Actions tab.
+# Runs Playwright test shards every day at **11:42 AM IST** (06:12 UTC),
+# on pull requests, and anytime you trigger it manually from the Actions tab.
 
 name: Run Playwright tests
 
@@ -9,6 +9,8 @@ on:
     # GitHub cron is always UTC → 06:12 UTC = 11:42 AM IST (UTC+5:30)
     - cron: '4 7 * * 1-5'
   workflow_dispatch:
+  pull_request:   # <-- Added: Runs on PR events too
+    types: [opened, synchronize, reopened]  # Optional: limit to relevant PR actions
 
 jobs:
   run-tests:
@@ -105,12 +107,3 @@ jobs:
             --token="trx_staging_c79d947e0f75d325ebf9849b9de6c7ef29921feb4bf272a9fdf53d0eac7911ca" \
             --upload-html \
             --verbose
-
-      # - name: Send TestDino report
-      #   env:
-      #     NODE_ENV: 'production'
-      #   # run: |
-        #   npx --yes tdpw ./playwright-report \
-        #    --token="trx_production_9d4c90f10995875fb233965425923cb8958295005a90d7ed42a02a7544ac4eda" \
-        #   --upload-html \
-        #   --verbose
