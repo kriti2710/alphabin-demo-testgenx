@@ -838,7 +838,7 @@ test('Alpha_E2E_012 - login to logout', async () => {
 });
 
 // Auto generated test case
-test.slip('Alpha_E2E_013 - Verify that the User Can Add a Product to Cart Before Login and Complete the Order After Logging In', async () => {
+test.skip('Alpha_E2E_013 - Verify that the User Can Add a Product to Cart Before Login and Complete the Order After Logging In', async () => {
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
     await abPlaywright.setupLogging(page1);
