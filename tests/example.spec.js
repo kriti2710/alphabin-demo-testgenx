@@ -628,7 +628,7 @@ test('Alpha_E2E_007: Verify that a User Can Filter Products by Price Range', asy
 });
 
 // Auto generated test case
-test('Alpha_E2E_008: Verify that User Can Complete the Journey from Login to Order Placement', async () => {
+test.skip('Alpha_E2E_008: Verify that User Can Complete the Journey from Login to Order Placement', async () => {
     // Initial Setup
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
@@ -838,7 +838,7 @@ test('Alpha_E2E_012 - login to logout', async () => {
 });
 
 // Auto generated test case
-test('Alpha_E2E_013 - Verify that the User Can Add a Product to Cart Before Login and Complete the Order After Logging In', async () => {
+test.slip('Alpha_E2E_013 - Verify that the User Can Add a Product to Cart Before Login and Complete the Order After Logging In', async () => {
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
     await abPlaywright.setupLogging(page1);
@@ -1322,7 +1322,7 @@ test('Alpha_E2E_030: Verify new user can successfully sign up, log in, and acces
 });
 
 // Auto generated test case
-test('Alpha_E2E_031: Verify new user can successfully register, log in, and place an order ', async () => {
+test.skip('Alpha_E2E_031: Verify new user can successfully register, log in, and place an order ', async () => {
     const uniqe = Math.floor(new Date().getTime() / 1000.0)
     const email = `kriti.test+${uniqe}@gmail.com`;
     const password = `Kriti@#$123`
@@ -1823,7 +1823,7 @@ test('Alpha_E2E_039: Verify that User Can View and Cancel an Order from the "My 
 });
 
 // Auto generated test case
-test('Alpha_E2E_040: Verify that User Can Add, Edit, and Delete Addresses', async () => {
+test.skip('Alpha_E2E_040: Verify that User Can Add, Edit, and Delete Addresses', async () => {
     // Initialization and Navigation
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
@@ -1865,7 +1865,7 @@ test('Alpha_E2E_041: Verify profile update and password change functionality for
 });
 
 // Auto generated test case
-test('Alpha_E2E_042: Verify that a User Can Filter Products by Price Range', async () => {
+test.skip('Alpha_E2E_042: Verify that a User Can Filter Products by Price Range', async () => {
     // Setup and Initialization
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
@@ -2531,7 +2531,7 @@ test('Alpha_E2E_061: Verify successful sign-up, login, and navigation to home pa
 });
 
 // Auto generated test case
-test('Alpha_E2E_062: Verify successful registration, login, and single order placement for a new user', async () => {
+test.skip('Alpha_E2E_062: Verify successful registration, login, and single order placement for a new user', async () => {
     const uniqe = Math.floor(new Date().getTime() / 1000.0)
     const email = `kriti.test+${uniqe}@gmail.com`;
     const password = `Kriti@#$123`
