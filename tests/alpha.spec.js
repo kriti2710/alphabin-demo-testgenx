@@ -22,8 +22,8 @@ test.afterEach(async () => {
 
 
 test('Alpha_E2E_014 - Verify that User is able to write and submit a product review successfully', async () => {
-    const email = `testing@gmail.com`;
-    const password = `Testing@123`;
+    const email = `test.user12@gmail.com`;
+    const password = `Test@12345`;
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
     await abPlaywright.setupLogging(page1);
@@ -57,8 +57,8 @@ test('Alpha_E2E_014 - Verify that User is able to write and submit a product rev
   });
 
 test('Alpha_E2E_015 - Verify that User is able to edit product review successfully', async () => {
-    const email = `testing@gmail.com`;
-    const password = `Testing@123`;
+    const email = `test.user12@gmail.com`;
+    const password = `Test@12345`;
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
     await abPlaywright.setupLogging(page1);
@@ -101,8 +101,8 @@ test('Alpha_E2E_015 - Verify that User is able to edit product review successful
   });
 
 test('Alpha_E2E_016 - Verify that User is able to delete product review successfully', async () => {
-    const email = `testing@gmail.com`;
-    const password = `Testing@123`;
+    const email = `test.user12@gmail.com`;
+    const password = `Test@12345`;
     const page1 = await context.newPage();
     await page1.goto('http://demo.alphabin.co');
     await abPlaywright.setupLogging(page1);
